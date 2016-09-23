@@ -3,14 +3,14 @@
 var gameOptions = {
   height: 450,
   width: 700,
-  numEnemies: 30,
+  numEnemies: 15,
   padding: 20
 };
 
 var gameStats = {
   score: 0,
   bestScore: 0
-}
+};
 
 // GAME BOARD SETUP
 
@@ -21,7 +21,7 @@ var axes = {
   y: d3.scale.linear()
       .domain([0, 100])
       .range([0, gameOptions.height])
-}
+};
 
 var gameBoard = d3.select('.board')
                 .append('svg')
@@ -50,28 +50,38 @@ var range = function(start, count) {
     });
 };
 
+var generateRandom = function(num) {
+  return (num + 10) * Math.random() * 1753;
+};
+
 // Create enemies
 var enemyData = range(0, gameOptions.numEnemies).map(function(i) {
-  return {
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100
-  };
+  return i;
 });
 
 var enemies = gameBoard.selectAll('.enemy')
-              .data(enemyData, function(d) {
-                return d.id;
-              });
+              .data(enemyData);
 
 enemies.enter()
   .append('svg:circle')
   .attr('class', 'enemy')
-  .attr('cx', function(enemy) {
-    return enemy.x;
+  .attr('cx', function(d) {
+    return generateRandom(d) % 700;
   })
-  .attr('cy', function(enemy) {
-    return enemy.y;
+  .attr('cy', function(d) {
+    return generateRandom(d) % 450;
   })
   .attr('r', 10)
   .style('opacity', 1);
+
+var move = function() {
+  enemies.data(range(0, gameOptions.numEnemies))
+          .transition().duration(900)
+          .attr('cx', function(d) {
+            return generateRandom(d) % 700;
+          })
+          .attr('cy', function(d) {
+            return generateRandom(d) % 450;
+          });
+};
+
