@@ -9,7 +9,8 @@ var gameOptions = {
 
 var gameStats = {
   score: 0,
-  bestScore: 0
+  bestScore: 0,
+  collisions: 0
 };
 
 // GAME BOARD SETUP
@@ -70,6 +71,7 @@ var initialize = function() {
     .attr('cy', function(d) {
       return generateRandom(d) % 450;
     })
+    .attr('xlink:href', 'asteroid.png')
     .attr('r', 10)
     .style('opacity', 1);
 };
@@ -92,7 +94,6 @@ var playerObj = {
 
 var drag = d3.behavior.drag()
     .on('drag', function(d, i) {
-      console.log('d.x', d.x, 'eventx', d3.event.dx);
       d.x += d3.event.dx;
       d.y += d3.event.dy;
       d3.select(this).attr('transform', function(d, i) {
@@ -101,12 +102,31 @@ var drag = d3.behavior.drag()
     });
 
 var player = gameBoard.selectAll('.player')
-             .data([playerObj]).enter().append('circle')
+             .data([playerObj]).enter().append('circle').attr('class', 'player')
              .attr('transform', 'translate(' + playerObj.x + ',' + playerObj.y + ')')
              .attr('r', 10).attr('fill', 'red').call(drag);
 
+var checkCollision = function() {
+  d3.selectAll('.enemy').each(function(d) {
+    var enemyX = d3.select(this).attr('cx');
+    var enemyY = d3.select(this).attr('cy');
+    var xDiff = Math.abs(enemyX - playerObj.x);
+    var yDiff = Math.abs(enemyY - playerObj.y);
+    var actualDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 
+    if (actualDistance < 20) {
+      gameStats.bestScore = Math.max(gameStats.bestScore, gameStats.score);
+      gameStats.score = 0;
+      gameStats.collisions++;
+      return true;
+    }
+  });
 
+  d3.select('.current').text('Current Score: ' + gameStats.score++);
+  d3.select('.highscore').text('High Score: ' + gameStats.bestScore);
+  d3.select('.collisions').text('Collisions: ' + gameStats.collisions);
+};
 
+setInterval(checkCollision, 40);
 initialize();
 setInterval(move, 1000);
