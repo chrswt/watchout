@@ -41,8 +41,6 @@ var updateBestScore = function() {
           .text('Fix me with Score Later');
 };
 
-// Helper function to implement range()
-
 var range = function(start, count) {
   return Array.apply(0, Array(count))
     .map(function(e, i) {
@@ -62,17 +60,19 @@ var enemyData = range(0, gameOptions.numEnemies).map(function(i) {
 var enemies = gameBoard.selectAll('.enemy')
               .data(enemyData);
 
-enemies.enter()
-  .append('svg:circle')
-  .attr('class', 'enemy')
-  .attr('cx', function(d) {
-    return generateRandom(d) % 700;
-  })
-  .attr('cy', function(d) {
-    return generateRandom(d) % 450;
-  })
-  .attr('r', 10)
-  .style('opacity', 1);
+var initialize = function() {
+  enemies.enter()
+    .append('circle')
+    .attr('class', 'enemy')
+    .attr('cx', function(d) {
+      return generateRandom(d) % 700;
+    })
+    .attr('cy', function(d) {
+      return generateRandom(d) % 450;
+    })
+    .attr('r', 10)
+    .style('opacity', 1);
+};
 
 var move = function() {
   enemies.data(range(0, gameOptions.numEnemies))
@@ -85,3 +85,28 @@ var move = function() {
           });
 };
 
+var playerObj = {
+  x: 350,
+  y: 225,
+};
+
+var drag = d3.behavior.drag()
+    .on('drag', function(d, i) {
+      console.log('d.x', d.x, 'eventx', d3.event.dx);
+      d.x += d3.event.dx;
+      d.y += d3.event.dy;
+      d3.select(this).attr('transform', function(d, i) {
+        return 'translate(' + [ d.x, d.y ] + ')';
+      });
+    });
+
+var player = gameBoard.selectAll('.player')
+             .data([playerObj]).enter().append('circle')
+             .attr('transform', 'translate(' + playerObj.x + ',' + playerObj.y + ')')
+             .attr('r', 10).attr('fill', 'red').call(drag);
+
+
+
+
+initialize();
+setInterval(move, 1000);
