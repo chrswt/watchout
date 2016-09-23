@@ -11,7 +11,13 @@
       <div class="current">Current score: <span>0</span></div>
       <div class="collisions">Collisions: <span>0</span></div>
     </div>
-    <div class="board"><div class="mouse"></div></div>
+    <div class="board"><div class="mouse">
+      <svg id='asteroid' width='0' height='0'>
+        <defs id='mdef'>
+          <pattern id='image' x='0' y='0' height='22' width='22'>
+            <image x='0' y='0' width='22' height='22' xlink:href='asteroid.png'></image>
+          </pattern>
+    </div></div>
     <script src="lib/d3.js" charset="utf-8"></script>
     <script src='watchout.js'></script>
   </body>

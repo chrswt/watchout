@@ -26,8 +26,15 @@ var axes = {
 
 var gameBoard = d3.select('.board')
                 .append('svg')
+                .attr('border', 10)
+                // .style('stroke', 'black')
+                // .style('stroke-width', 10)
                 .attr('width', gameOptions.width)
                 .attr('height', gameOptions.height);
+
+d3.select('svg').append('rect').attr('x', 0).attr('y', 0)
+  .attr('height', gameOptions.height).attr('width', gameOptions.width)
+  .style('stroke', 'black').style('fill', 'none').style('stroke-width', 1);
 
 var updateScore = function() {
   return d3.select('.current')
@@ -64,6 +71,15 @@ var enemies = gameBoard.selectAll('.enemy')
 var initialize = function() {
   enemies.enter()
     .append('circle')
+    .style('fill', 'url(#image)')
+    // .append('svg:image')
+    // .attr('xlink:href', 'asteroid.png')
+    // .attr('width', 22)
+    // .attr('height', 22)
+    // .attr('x', 100)
+    // .attr('y', 100)
+
+
     .attr('class', 'enemy')
     .attr('cx', function(d) {
       return generateRandom(d) % 700;
@@ -71,7 +87,6 @@ var initialize = function() {
     .attr('cy', function(d) {
       return generateRandom(d) % 450;
     })
-    .attr('xlink:href', 'asteroid.png')
     .attr('r', 10)
     .style('opacity', 1);
 };
@@ -80,10 +95,10 @@ var move = function() {
   enemies.data(range(0, gameOptions.numEnemies))
           .transition().duration(900)
           .attr('cx', function(d) {
-            return generateRandom(d) % 700;
+            return generateRandom(d) % 660 + 20;
           })
           .attr('cy', function(d) {
-            return generateRandom(d) % 450;
+            return generateRandom(d) % 410 + 20;
           });
 };
 
@@ -92,10 +107,20 @@ var playerObj = {
   y: 225,
 };
 
+// var img = gameBoard.append('svg:image').attr('xlink:href', 'asteroid.png')
+//             .attr('width', 22)
+//             .attr('height', 22)
+//             .attr('x', 100)
+//             .attr('y', 100);
+
 var drag = d3.behavior.drag()
     .on('drag', function(d, i) {
       d.x += d3.event.dx;
       d.y += d3.event.dy;
+      d.x = Math.min(d.x, 680);
+      d.y = Math.min(d.y, 430);
+      d.x = Math.max(20, d.x);
+      d.y = Math.max(20, d.y);
       d3.select(this).attr('transform', function(d, i) {
         return 'translate(' + [ d.x, d.y ] + ')';
       });
