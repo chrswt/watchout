@@ -27,27 +27,12 @@ var axes = {
 var gameBoard = d3.select('.board')
                 .append('svg')
                 .attr('border', 10)
-                // .style('stroke', 'black')
-                // .style('stroke-width', 10)
                 .attr('width', gameOptions.width)
                 .attr('height', gameOptions.height);
 
-d3.select('svg').append('rect').attr('x', 0).attr('y', 0)
-  .attr('height', gameOptions.height).attr('width', gameOptions.width)
-  .style('stroke', 'black').style('fill', 'none').style('stroke-width', 1);
-
-var updateScore = function() {
-  return d3.select('.current')
-          .text('Fix Me With Score Later');
-};
-
-var bestScore = 0;
-
-var updateBestScore = function() {
-  // var bestScore = Math.max(bestScore, currentScore)
-  return d3.select('.highscore')
-          .text('Fix me with Score Later');
-};
+// d3.select('svg').append('rect').attr('x', 0).attr('y', 0)
+//   .attr('height', gameOptions.height).attr('width', gameOptions.width)
+//   .style('stroke', 'black').style('fill', 'none').style('stroke-width', 1);
 
 var range = function(start, count) {
   return Array.apply(0, Array(count))
@@ -68,10 +53,13 @@ var enemyData = range(0, gameOptions.numEnemies).map(function(i) {
 var enemies = gameBoard.selectAll('.enemy')
               .data(enemyData);
 
+var asteroidStr = 'url(#image2)';
+var shurikenStr = 'url(#image)';
+
 var initialize = function() {
   enemies.enter()
     .append('circle')
-    .style('fill', 'url(#image)')
+    .style('fill', shurikenStr)
     // .append('svg:image')
     // .attr('xlink:href', 'asteroid.png')
     // .attr('width', 22)
@@ -87,7 +75,7 @@ var initialize = function() {
     .attr('cy', function(d) {
       return generateRandom(d) % 450;
     })
-    .attr('r', 10)
+    .attr('r', 15)
     .style('opacity', 1);
 };
 
@@ -106,12 +94,6 @@ var playerObj = {
   x: 350,
   y: 225,
 };
-
-// var img = gameBoard.append('svg:image').attr('xlink:href', 'asteroid.png')
-//             .attr('width', 22)
-//             .attr('height', 22)
-//             .attr('x', 100)
-//             .attr('y', 100);
 
 var drag = d3.behavior.drag()
     .on('drag', function(d, i) {

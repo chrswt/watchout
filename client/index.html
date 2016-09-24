@@ -4,7 +4,7 @@
     <link rel='stylesheet' type='css' href='styles.css'>
   </head>
   <body>
-<!--     <button onclick="move()">Start</button> -->
+    <!-- <button onclick="initialize2()">Start</button> -->
     <div class="scoreboard">
       <!-- Modify the scoreboard when important events occur in your game! -->
       <div class="highscore">High score: <span>0</span></div>
@@ -14,7 +14,10 @@
     <div class="board"><div class="mouse">
       <svg id='asteroid' width='0' height='0'>
         <defs id='mdef'>
-          <pattern id='image' x='0' y='0' height='22' width='22'>
+          <pattern id='image' x='0' y='0' height='30' width='30'>
+            <image class='shuriken' x='0' y='0' width='30' height='30' xlink:href='shuriken2.gif'></image>
+          </pattern>
+          <pattern id='image2' x='0' y='0' height='22' width='22'>
             <image x='0' y='0' width='22' height='22' xlink:href='asteroid.png'></image>
           </pattern>
     </div></div>
